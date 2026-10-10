@@ -58,6 +58,10 @@ Example cmake configuration:
  3. If you want to use the system Qt again, you must delete the `vcpkg.json` generated in the project root and the `build` folder and reconfigure the project from scratch.
 
 
+### Flow DMG on macOS
+
+For an Apple Silicon build with bundled dependencies, see [Flow for macOS](flow-macos.md)
+
 ### macOS codesign
 
 The code signing option `APPLE_CODESIGN_DEV` is only for local development and not intended for distributed bundles. 

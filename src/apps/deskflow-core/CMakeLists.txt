@@ -3,10 +3,10 @@
 # SPDX-FileCopyrightText: (C) 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
-set(target ${CMAKE_PROJECT_NAME}-core)
+set(target ${CORE_BINARY})
 
 add_executable(${target}
-  "${target}.cpp"
+  "deskflow-core.cpp"
   CoreArgs.h
   CoreArgParser.h
   CoreArgParser.cpp
@@ -19,7 +19,7 @@ if(WIN32)
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in ${target}.rc)
 
   target_sources(${target} PRIVATE
-    ${target}.exe.manifest
+    deskflow-core.exe.manifest
     ${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico
     ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc
   )
@@ -49,7 +49,7 @@ if(BUILD_OSX_BUNDLE)
   set_target_properties(${target} PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
-    RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS
+    RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${MAC_APP_NAME}>/MacOS
     XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
   )
   if (APPLE_CODESIGN_DEV)

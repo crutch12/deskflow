@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 if(APPLE)
-  set(target Deskflow)
+  set(target ${MAC_APP_NAME})
 else()
   set(target deskflow)
 endif()
@@ -21,7 +21,7 @@ elseif(BUILD_OSX_BUNDLE)
   set(BUNDLE_BUNDLE_NAME "${target}")
   set(BUNDLE_DISPLAY_NAME "${target}")
   set(BUNDLE_GUI_IDENTIFIER "${CMAKE_PROJECT_REV_FQDN}")
-  set(BUNDLE_ICON_FILE ${target}.icns)
+  set(BUNDLE_ICON_FILE Deskflow.icns)
   set(BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}")
   set(BUNDLE_COPYRIGHT "${CMAKE_PROJECT_COPYRIGHT}")
 
@@ -47,7 +47,8 @@ target_link_libraries(
   common
   Qt6::Core
   Qt6::Widgets
-  Qt6::Network)
+  Qt6::Network
+  Qt6::Svg)
 
 install(
   TARGETS ${target}
