@@ -9,6 +9,9 @@
 #include "OSXKeyStateTests.h"
 
 #include "base/EventQueue.h"
+#include <atomic>
+#include <thread>
+#include <pthread.h>
 
 #define SHIFT_ID_L kKeyShift_L
 #define SHIFT_ID_R kKeyShift_R
@@ -20,6 +23,19 @@ void OSXKeyStateTests::initTestCase()
 {
   m_arch.init();
   m_log.setFilter(LogLevel::Level::Verbose);
+}
+
+void OSXKeyStateTests::inputSourceCallsRunOnMainThread()
+{
+  std::atomic<bool> done = false;
+  bool ranOnMainThread = false;
+  std::thread worker([&] {
+    runOSXInputSourceOperation([&] { ranOnMainThread = pthread_main_np() != 0; });
+    done = true;
+  });
+  QTRY_VERIFY(done.load());
+  worker.join();
+  QVERIFY(ranOnMainThread);
 }
 
 void OSXKeyStateTests::mapModifiersFromOSX_OSXMask()

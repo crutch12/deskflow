@@ -44,6 +44,7 @@ class Mutex;
 //! Implementation of IPlatformComputer for OS X
 class OSXComputer : public PlatformComputer
 {
+  friend class OSXComputerTests;
 public:
   OSXComputer(IEventQueue *events, bool isPrimary, bool enableLangSync = false);
 

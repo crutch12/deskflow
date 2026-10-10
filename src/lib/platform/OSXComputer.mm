@@ -645,6 +645,9 @@ void OSXComputer::fakeMouseWheel(ScrollDelta delta) const
 
 void OSXComputer::showCursor()
 {
+  if (!m_cursorHidden) {
+    return;
+  }
   LOG_DEBUG("showing cursor");
 
   CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
@@ -656,6 +659,7 @@ void OSXComputer::showCursor()
   CGError error = CGDisplayShowCursor(m_displayID);
   if (error != kCGErrorSuccess) {
     LOG_ERR("failed to show cursor, error=%d", error);
+    return;
   }
 
   // appears to fix "mouse randomly not showing" bug
@@ -668,6 +672,9 @@ void OSXComputer::showCursor()
 
 void OSXComputer::hideCursor()
 {
+  if (m_cursorHidden) {
+    return;
+  }
   LOG_DEBUG("hiding cursor");
 
   CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
@@ -679,6 +686,7 @@ void OSXComputer::hideCursor()
   CGError error = CGDisplayHideCursor(m_displayID);
   if (error != kCGErrorSuccess) {
     LOG_ERR("failed to hide cursor, error=%d", error);
+    return;
   }
 
   // appears to fix "mouse randomly not hiding" bug

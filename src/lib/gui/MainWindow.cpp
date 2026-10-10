@@ -160,7 +160,7 @@ MainWindow::MainWindow()
 
 #ifdef Q_OS_MACOS
   // Route native quits (Cmd+Q / Apple menu Quit / Dock "Quit") to the usual close-to-tray decision instead.
-  installQuitHandler([this] { return !maybeHideToTray(); });
+  installQuitHandler([this] { return m_quitting || !maybeHideToTray(); });
 #endif
 }
 MainWindow::~MainWindow()
@@ -914,6 +914,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     Settings::setValue(Settings::Gui::AutoStartCore, m_coreProcess.isStarted());
   }
   qDebug() << "quitting application";
+  m_quitting = true;
 
   // any connected dock view acitons will be triggered
   // disconnect them before accepting the event

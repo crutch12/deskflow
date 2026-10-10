@@ -10,10 +10,12 @@ xcode-select --install
 brew install cmake ninja qt openssl@3
 git clone --branch flow-macos https://github.com/crutch12/deskflow.git
 cd deskflow
+git fetch https://github.com/deskflow/deskflow.git tag v1.27.0
 sh deploy/mac/build.sh
 ```
 
 The installer is `build/macos/deskflow-<version>-macos-arm64.dmg`
+The upstream release tag keeps the version consistent in forks without tags
 It contains `Flow.app` and the `flow-core` worker, with Qt and OpenSSL bundled
 Homebrew is only needed to build, not to run the installed app
 

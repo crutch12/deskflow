@@ -170,16 +170,18 @@ void CoreProcess::checkExistingProcess()
   client->connectToServer();
 }
 
-void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
+void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
   using enum ProcessState;
+  const bool wasStarted = m_processState == Started;
   setConnectionState(ConnectionState::Disconnected);
 
   if (m_retryTimer.isActive()) {
     m_retryTimer.stop();
   }
 
-  if (exitCode != s_exitSuccess) {
+  if (exitStatus == QProcess::NormalExit &&
+      (exitCode == s_exitDuplicate || exitCode == s_exitArgs || exitCode == s_exitConfig)) {
     setProcessState(Stopped);
     if (exitCode == s_exitDuplicate) {
       checkExistingProcess();
@@ -189,9 +191,13 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
     return;
   }
 
-  qDebug("desktop process exited normally");
+  if (exitCode != s_exitSuccess || exitStatus == QProcess::CrashExit) {
+    qWarning("desktop process exited unexpectedly, code: %d", exitCode);
+  } else {
+    qDebug("desktop process exited normally");
+  }
 
-  if (const auto wasStarted = m_processState == Started; wasStarted) {
+  if (wasStarted) {
     qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
     setProcessState(RetryPending);
     m_retryTimer.setSingleShot(true);
